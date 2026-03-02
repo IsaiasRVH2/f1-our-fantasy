@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine
 from app.config import settings
+from app.database import engine
+from app.routers import health
 from sqlalchemy import text
 import logging
 
@@ -18,6 +19,9 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"],
 )
+
+# Registro de Routers
+app.include_router(health.router)
 
 @app.on_event("startup")
 def verify_db_connection():
