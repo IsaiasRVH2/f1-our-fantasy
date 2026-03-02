@@ -1,0 +1,86 @@
+# Node / React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.pnp.*
+/build/
+/dist/
+/.cache/
+/.vite/
+.eslintcache
+
+# Environment files (keep out of repo)
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Static / generated assets
+/public/static/
+*.local
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.coverage
+coverage.xml
+htmlcov/
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.envs/
+.venv/
+env/
+ENV/
+env.bak/
+.python-version
+
+# PostgreSQL & DB artifacts
+pgdata/
+postgres-data/
+*.sql
+*.dump
+*.backup
+*.db
+*.db-journal
+.psql_history
+
+# Docker
+docker-compose.override.yml
+**/Dockerfile*
+.docker/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs and temp files
+logs/
+*.log
+*.tmp
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Optional: ignore local secret files you don't want committed
+secrets.yml
+local-*.json
