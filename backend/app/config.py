@@ -5,6 +5,9 @@ from typing import List, Union
 class Settings(BaseSettings):
     DATABASE_URL: str
     ALLOWED_ORIGINS: Union[List[str], str]
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
     
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod
