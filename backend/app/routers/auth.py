@@ -6,6 +6,7 @@ from app.schemas.user import UserCreate, UserOut
 from app.crud import user as user_crud
 from app.core.security import create_access_token
 from app.schemas.token import Token
+from app.config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -14,6 +15,12 @@ def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     """
     Crea un nuevo usuario usando la sesión inyectada por get_db.
     """
+    if user_in.access_code != settings.ACCESS_CODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Código de acceso inválido."
+        )
+    
     db_user = user_crud.get_user_by_email(db, email=user_in.email)
     if db_user:
         raise HTTPException(
