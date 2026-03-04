@@ -24,4 +24,14 @@ export const checkHealth = async () => {
     }
 };
 
+/**
+ * Registra un nuevo usuario en el sistema.
+ * @param {*} userData - Los datos del usuario a registrar.
+ * @returns {Promise} - La promesa que se resuelve con los datos del usuario registrado.
+ */
+export const registerUser = async (userData) => {
+  const response = await api.post('/auth/register', userData);
+  return response.data;
+};
+
 export default api;
