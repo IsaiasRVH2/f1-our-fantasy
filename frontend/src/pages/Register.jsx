@@ -68,11 +68,17 @@ const Register = () => {
 
       navigate('/login');
     } catch (err) {
-      // Captura el error que viene de FastAPI (400, 422, etc.)
-      const message = err.response?.data?.detail || "Error en el servidor";
-      setError(typeof message === 'string' ? message : "Datos inválidos");
-      toast.error(`¡Error en el registro! ${message}`, { id: toastId });
-      console.error("Error en registro:", err);
+      const detail = err.response?.data?.detail;
+      let errorMessage = "Error en el servidor. Intenta de nuevo.";
+
+      if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        errorMessage = detail[0].msg; 
+      }
+
+      toast.error(errorMessage, { id: toastId });
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
