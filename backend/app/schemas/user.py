@@ -14,6 +14,7 @@ class UserBase(BaseModel):
 # Esquema para Registro
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8, examples=["secret123"])
+    access_code: str
     
     @field_validator("password")
     @classmethod

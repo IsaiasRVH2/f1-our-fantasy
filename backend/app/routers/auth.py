@@ -6,6 +6,7 @@ from app.schemas.user import UserCreate, UserOut
 from app.crud import user as user_crud
 from app.core.security import create_access_token
 from app.schemas.token import Token
+from app.config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -14,12 +15,25 @@ def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     """
     Crea un nuevo usuario usando la sesión inyectada por get_db.
     """
-    db_user = user_crud.get_user_by_email(db, email=user_in.email)
-    if db_user:
+    # Verificar código de acceso
+    if user_in.access_code != settings.ACCESS_CODE:
         raise HTTPException(
-            status_code=400,
-            detail="El usuario con este email ya existe."
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Código de acceso inválido."
         )
+
+    # Verificar si el email ya esta registrado
+    if user_crud.get_user_by_email(db, email=user_in.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Este email ya está registrado. Usa otro."
+        )
+        
+    # Verificar si el usuario ya esta registrado
+    if user_crud.get_user_by_username(db, username=user_in.username):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Este nombre de usuario ya está en uso. Elige otro."       )
     return user_crud.create_user(db=db, user_in=user_in)
 
 @router.post("/login", response_model=Token)
