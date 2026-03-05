@@ -1,19 +1,27 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../services/api';
 import Input from '../components/base/Input';
 import Button from '../components/base/Button';
 import AuthCard from '../components/base/AuthCard';
 
-const ACCESS_CODE_VALID = import.meta.env.ACCESS_CODE;
-
 const Register = () => {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
-    username: '', email: '', password: '', confirmPassword: '', accessCode: ''
+      username: '', email: '', password: '', confirmPassword: '', accessCode: ''
   });
+    
+  const [error, setError] = useState('');
+
+  const [loading, setLoading] = useState(false);
+    
+  const ACCESS_CODE_VALID = import.meta.env.VITE_ACCESS_CODE;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     // Validaciones de Frontend
     if (formData.password !== formData.confirmPassword) {
       return setError("Las contraseñas no coinciden.");
@@ -24,10 +32,15 @@ const Register = () => {
 
     setLoading(true);
     try {
-      // Limpiamos el objeto para el backend (quitamos lo que no pide Pydantic)
-      const { confirmPassword, accessCode, ...dataToSend } = formData;
+      // Limpiamos el objeto para el backend
+      const { confirmPassword, accessCode, ...restOfData } = formData;
       
-      // Llamada real al backend
+      const dataToSend = {
+        ...restOfData,
+        access_code: accessCode
+      };
+
+      // Llamada al backend
       await registerUser(dataToSend);
       
       alert("¡Registro exitoso!");
@@ -36,6 +49,7 @@ const Register = () => {
       // Captura el error que viene de FastAPI (400, 422, etc.)
       const message = err.response?.data?.detail || "Error en el servidor";
       setError(typeof message === 'string' ? message : "Datos inválidos");
+      console.error("Error en registro:", err);
     } finally {
       setLoading(false);
     }
