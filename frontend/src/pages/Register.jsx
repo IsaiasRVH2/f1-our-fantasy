@@ -71,6 +71,7 @@ const Register = () => {
       // Captura el error que viene de FastAPI (400, 422, etc.)
       const message = err.response?.data?.detail || "Error en el servidor";
       setError(typeof message === 'string' ? message : "Datos inválidos");
+      toast.error(`¡Error en el registro! ${message}`, { id: toastId });
       console.error("Error en registro:", err);
     } finally {
       setLoading(false);
