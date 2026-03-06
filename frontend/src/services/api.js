@@ -52,11 +52,37 @@ export const loginUser = async (credentials) => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-  return response.data; // Esto devolverá { access_token: "...", token_type: "bearer" }
+  return response.data; 
 };
 
 export const getDrivers = async () => {
   const response = await api.get('/drivers/');
+  return response.data;
+};
+
+export const deleteDriver = async (driverId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/drivers/${driverId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+};
+
+export const createDriver = async (driverData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/drivers/', driverData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateDriver = async (driverId, driverData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.patch(`/drivers/${driverId}`, driverData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
 
