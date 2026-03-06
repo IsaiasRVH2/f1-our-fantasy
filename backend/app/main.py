@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine
-from app.routers import auth, drivers, health
+from app.routers import auth, drivers, grand_prix as gp, health
 from app.lifespan import lifespan
 import logging
 
@@ -26,4 +26,5 @@ app.add_middleware(
 # Registro de Routers
 app.include_router(auth.router)
 app.include_router(drivers.router)
+app.include_router(gp.router)
 app.include_router(health.router)
