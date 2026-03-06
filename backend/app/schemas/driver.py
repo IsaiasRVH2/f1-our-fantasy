@@ -14,3 +14,9 @@ class DriverOut(DriverBase):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
+    
+class DriverUpdate(BaseModel):
+    full_name: Optional[str] = Field(None, min_length=2, max_length=100)
+    team_name: Optional[str] = Field(None, min_length=2, max_length=100)
+    abbreviation: Optional[str] = Field(None, min_length=3, max_length=3, pattern="^[A-Z]{3}$")
+    image_url: Optional[str] = None
