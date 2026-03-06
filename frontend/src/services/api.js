@@ -55,4 +55,9 @@ export const loginUser = async (credentials) => {
   return response.data; // Esto devolverá { access_token: "...", token_type: "bearer" }
 };
 
+export const getDrivers = async () => {
+  const response = await api.get('/drivers/');
+  return response.data;
+};
+
 export default api;

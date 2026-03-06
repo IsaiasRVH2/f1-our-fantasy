@@ -33,7 +33,7 @@ const Login = () => {
       login(response.access_token);
       
       toast.success("¡Se ha iniciado sesión!", { id: toastId });
-      navigate('/health');
+      navigate('/dashboard');
 
     } catch (err) {
       // Manejo de errores
