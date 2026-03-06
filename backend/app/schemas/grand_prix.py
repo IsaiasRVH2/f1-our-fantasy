@@ -31,3 +31,24 @@ class GrandPrixOut(GrandPrixBase):
     
     class Config:
         from_attributes = True
+        
+class GrandPrixUpdate(BaseModel):
+    name: Optional[str] = None
+    season_year: Optional[int] = Field(None, ge=2024)
+    season_half: Optional[int] = Field(None, le=2)
+    fp1_date: Optional[datetime] = None
+    fp2_date: Optional[datetime] = None
+    fp3_date: Optional[datetime] = None
+    squaly_date: Optional[datetime] = None
+    sprint_date: Optional[datetime] = None
+    qualy_date: Optional[datetime] = None
+    race_date: Optional[datetime] = None
+    has_sprint: Optional[bool] = None
+    is_active: Optional[bool] = None
+
+    @field_validator("season_half")
+    @classmethod
+    def validate_half(cls, v: Optional[int]) -> Optional[int]:
+        if v is not None and v not in [1, 2]:
+            raise ValueError("La mitad de la temporada debe ser 1 o 2")
+        return v
