@@ -37,11 +37,34 @@ const Register = () => {
       return setError("Email inválido.");
     }
 
+    const pwd = formData.password;
+    if (pwd.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return setError("Contraseña muy corta.");
+    }
+    if (!/[A-Z]/.test(pwd)) {
+      toast.error("Agrega al menos una letra MAYÚSCULA a tu contraseña.");
+      return setError("Falta mayúscula.");
+    }
+    if (!/[a-z]/.test(pwd)) {
+      toast.error("Agrega al menos una letra minúscula a tu contraseña.");
+      return setError("Falta minúscula.");
+    }
+    if (!/[0-9]/.test(pwd)) {
+      toast.error("Tu contraseña debe contener al menos un número.");
+      return setError("Falta número.");
+    }
+    if (!/[\W_]/.test(pwd)) { // \W significa "cualquier carácter que no sea alfanumérico"
+      toast.error("Tu contraseña necesita al menos un símbolo (ej. @, #, !, $, *).");
+      return setError("Falta símbolo.");
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Las contraseñas no coinciden.");
       console.warn("Error de validación: Contraseñas no coinciden.");
       return setError("Las contraseñas no coinciden.");
     }
+
     if (formData.accessCode !== ACCESS_CODE_VALID) {
       toast.error("Código de acceso inválido.");
       console.warn("Error de validación: Código de acceso inválido.");
