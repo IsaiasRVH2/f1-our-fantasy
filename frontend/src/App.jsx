@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import HealthCheck from './pages/HealthCheck';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -28,11 +29,17 @@ function App() {
       
       <Router>
         <Routes>
+          {/* RUTAS PÚBLICAS */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/health" element={<HealthCheck />} />
-          <Route path="/" element={<Navigate to="/health" />} />
+          
+          {/* RUTAS PROTEGIDAS */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="*" element={
             <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white font-black uppercase italic text-4xl">
               404 - Out of Track
