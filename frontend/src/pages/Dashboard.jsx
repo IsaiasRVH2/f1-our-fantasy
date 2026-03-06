@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDrivers } from '../services/api';
 import DriverList from '../components/drivers/DriversList';
+import Header from '../components/layout/Header';
 
 const Dashboard = () => {
   const [drivers, setDrivers] = useState([]);
@@ -39,14 +40,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
       {/* Header */}
-      <header className="mb-10 border-b border-slate-800 pb-6">
-        <h1 className="text-4xl font-black italic uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
-          Bienvenido, {username}
-        </h1>
-        <p className="text-slate-400 mt-2">Paddock General - Temporada 2026</p>
-      </header>
+      <Header username={username} />
 
-      {/* Contenido principal delegando el renderizado */}
+      {/* Contenido principal */}
       <section>
         <h2 className="text-2xl font-bold mb-6 border-l-4 border-emerald-500 pl-3">
           Parrilla de Pilotos
