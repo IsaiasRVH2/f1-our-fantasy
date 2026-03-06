@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { loginUser } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import Input from '../components/base/Input';
 import Button from '../components/base/Button';
 import AuthCard from '../components/base/AuthCard';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
@@ -23,20 +26,17 @@ const Login = () => {
     const toastId = toast.loading('Iniciando sesión...');
 
     try {
-      // Llamada a nuestra capa de servicios
+      // Llamada a capa de servicios
       const response = await loginUser(formData);
       
-      // Guardamos el token en el almacenamiento del navegador
-      localStorage.setItem('token', response.access_token);
+      // Guarda el token en el almacenamiento del navegador
+      login(response.access_token);
       
       toast.success("¡Se ha iniciado sesión!", { id: toastId });
-      
-      // Redirigimos al dashboard (ruta que crearemos más adelante)
-      // Por ahora, podemos mandarlo al health check o dejarlo en /
-      navigate('/health'); 
-      
+      navigate('/health');
+
     } catch (err) {
-      // Manejo de errores ("Credenciales incorrectas")
+      // Manejo de errores
       const message = err.response?.data?.detail || "Error al intentar acceder.";
       toast.error(typeof message === 'string' ? message : "Credenciales inválidas.", { id: toastId });
     } finally {

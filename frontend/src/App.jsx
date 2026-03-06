@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import HealthCheck from './pages/HealthCheck';
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Toaster 
         position="bottom-right" 
         toastOptions={{
@@ -37,7 +38,7 @@ function App() {
           } />
         </Routes>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
 
