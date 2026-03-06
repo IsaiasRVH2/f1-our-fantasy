@@ -34,4 +34,25 @@ export const registerUser = async (userData) => {
   return response.data;
 };
 
+/**
+ * Inicia sesión en el sistema.
+ * @param {*} credentials - Las credenciales del usuario (email y contraseña).
+ * @returns {Promise} - La promesa que se resuelve con los datos del usuario autenticado.
+ */
+
+export const loginUser = async (credentials) => {
+  
+  const formData = new URLSearchParams();
+  // Mapeamos nuestro 'email' al campo 'username' que espera FastAPI
+  formData.append('username', credentials.email); 
+  formData.append('password', credentials.password);
+
+  const response = await api.post('/auth/login', formData, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+  return response.data; // Esto devolverá { access_token: "...", token_type: "bearer" }
+};
+
 export default api;

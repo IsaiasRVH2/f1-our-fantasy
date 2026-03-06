@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Register from './pages/Register';
+import Login from './pages/Login';
 import HealthCheck from './pages/HealthCheck';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/health" element={<HealthCheck />} />
           <Route path="/" element={<Navigate to="/health" />} />
           <Route path="*" element={
