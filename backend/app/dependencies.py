@@ -1,9 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
-# Ajusta estos imports según la estructura real de tu proyecto
 from app.database import get_db
 from app import models
-from app.core.auth import get_current_user # Asumiendo que aquí tienes tu validador de JWT
+from app.core.auth import get_current_user
 
 def get_current_admin_user(current_user: models.User = Depends(get_current_user)):
     """

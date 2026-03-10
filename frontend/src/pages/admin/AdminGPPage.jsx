@@ -42,7 +42,15 @@ const AdminGPPage = () => {
     const newStatus = !gp.is_active;
     try {
       const updated = await updateGP(gp.id, { is_active: newStatus });
-      setGPs(gps.map(g => g.id === updated.id ? updated : g));
+      
+      setGPs(gps.map(g => {
+        if (g.id === updated.id) return updated;
+        
+        if (newStatus === true) return { ...g, is_active: false };
+        
+        return g;
+      }));
+      
       toast.success(newStatus ? `🏁 ${gp.name} ahora está ACTIVO` : `🛑 ${gp.name} desactivado`);
     } catch (error) {
       toast.error("Error al cambiar el estado del evento.");

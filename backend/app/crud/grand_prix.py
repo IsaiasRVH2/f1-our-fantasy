@@ -22,6 +22,16 @@ def create_gp(db: Session, gp_in: GrandPrixCreate):
 def update_gp(db: Session, db_gp: models.GrandPrix, gp_in: GrandPrixUpdate):
     update_data = gp_in.model_dump(exclude_unset=True) 
     
+    if update_data.get("is_active") is True:
+        currently_active = db.query(models.GrandPrix).filter(
+            models.GrandPrix.is_active == True,
+            models.GrandPrix.id != db_gp.id
+        ).first()
+        
+        if currently_active:
+            currently_active.is_active = False
+            db.add(currently_active)
+    
     for key, value in update_data.items():
         setattr(db_gp, key, value)
         
