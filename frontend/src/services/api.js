@@ -86,4 +86,33 @@ export const updateDriver = async (driverId, driverData) => {
   return response.data;
 };
 
+export const getGPs = async () => {
+  const response = await api.get('/gp/');
+  return response.data;
+};
+
+export const createGP = async (gpData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/gp/', gpData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateGP = async (gpId, gpData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.patch(`/gp/${gpId}`, gpData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteGP = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/gp/${gpId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 export default api;

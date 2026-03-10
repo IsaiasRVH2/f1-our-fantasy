@@ -6,12 +6,13 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import HealthCheck from './pages/HealthCheck';
 import AdminDriversPage from './pages/admin/AdminDriversPage';
+import AdminGPPage from './pages/admin/AdminGPPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
     <AuthProvider>
-      <Toaster 
+      <Toaster  
         position="bottom-right" 
         toastOptions={{
           style: {
@@ -39,6 +40,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/drivers" element={<AdminDriversPage />} />
+            <Route path="/admin/gp" element={<AdminGPPage />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/login" />} />
