@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getDrivers, deleteDriver, createDriver, updateDriver } from '../../services/api';
-import Header from '../../components/layout/Header';
 import AdminDriverTable from '../../components/admin/AdminDriverTable';
 import AdminDriverForm from '../../components/admin/AdminDriverForm';
 
@@ -72,9 +71,7 @@ const AdminDriversPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-8">
-      <Header username="Administrador" />
-
+    <div className="text-white">
       <section className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold border-l-4 border-cyan-500 pl-3">

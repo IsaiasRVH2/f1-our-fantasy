@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import HealthCheck from './pages/HealthCheck';
+import AdminLayout from './components/layout/AdminLayout';
 import AdminDriversPage from './pages/admin/AdminDriversPage';
 import AdminGPPage from './pages/admin/AdminGPPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -39,8 +40,12 @@ function App() {
           {/* RUTAS PROTEGIDAS */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin/drivers" element={<AdminDriversPage />} />
-            <Route path="/admin/gp" element={<AdminGPPage />} />
+            {/* GRUPO DE RUTAS DE ADMINISTRADOR */}
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
+              <Route path="/admin/gp" element={<AdminGPPage />} /> 
+              {/* <Route path="/admin/results" element={<AdminResultsPage />} />*/}
+            </Route>
           </Route>
 
           <Route path="/" element={<Navigate to="/login" />} />
