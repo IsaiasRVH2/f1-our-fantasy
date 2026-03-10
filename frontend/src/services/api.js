@@ -115,4 +115,12 @@ export const deleteGP = async (gpId) => {
   return response.data;
 };
 
+export const uploadRaceResults = async (gpId, resultsData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post(`/admin/results/${gpId}`, resultsData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 export default api;

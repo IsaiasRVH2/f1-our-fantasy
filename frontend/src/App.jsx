@@ -8,6 +8,7 @@ import HealthCheck from './pages/HealthCheck';
 import AdminLayout from './components/layout/AdminLayout';
 import AdminDriversPage from './pages/admin/AdminDriversPage';
 import AdminGPPage from './pages/admin/AdminGPPage';
+import AdminResultsPage from './pages/admin/AdminResultsPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -44,7 +45,7 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
               <Route path="/admin/gp" element={<AdminGPPage />} /> 
-              {/* <Route path="/admin/results" element={<AdminResultsPage />} />*/}
+              <Route path="/admin/results" element={<AdminResultsPage />} />
             </Route>
           </Route>
 

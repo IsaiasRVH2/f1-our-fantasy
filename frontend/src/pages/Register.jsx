@@ -76,7 +76,7 @@ const Register = () => {
     const toastId = toast.loading('Calentando neumáticos... registrando piloto.');
 
     try {
-      // Limpiamos el objeto para el backend
+      // Limpia el objeto para el backend
       const { confirmPassword, accessCode, ...restOfData } = formData;
       
       const dataToSend = {
