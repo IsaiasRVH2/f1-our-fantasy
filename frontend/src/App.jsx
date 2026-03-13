@@ -9,6 +9,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import AdminDriversPage from './pages/admin/AdminDriversPage';
 import AdminGPPage from './pages/admin/AdminGPPage';
 import AdminResultsPage from './pages/admin/AdminResultsPage';
+import AdminRoute from './components/auth/AdminRoute';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -42,10 +43,12 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             {/* GRUPO DE RUTAS DE ADMINISTRADOR */}
-            <Route element={<AdminLayout />}>
-              <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
-              <Route path="/admin/gp" element={<AdminGPPage />} /> 
-              <Route path="/admin/results" element={<AdminResultsPage />} />
+            <Route element={<AdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
+                <Route path="/admin/gp" element={<AdminGPPage />} /> 
+                <Route path="/admin/results" element={<AdminResultsPage />} />
+              </Route>
             </Route>
           </Route>
 
