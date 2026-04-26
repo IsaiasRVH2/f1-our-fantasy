@@ -9,6 +9,7 @@ class AssignmentBase(BaseModel):
     gp_id: int
     acquired_method: AcquiredMethod
     is_active: bool = True
+    is_pack_opened: bool = False
 
 class AssignmentCreate(AssignmentBase):
     pass

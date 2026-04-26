@@ -1,6 +1,7 @@
 import random
 from typing import Iterable
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app import models
@@ -47,6 +48,7 @@ def _build_random_assignments(
                     gp_id=gp_id,
                     acquired_method=AcquiredMethod.pack_opening,
                     is_active=True,
+                    is_pack_opened=False,
                 )
             )
 
@@ -67,3 +69,50 @@ def generate_batch_assignments(db: Session, gp_id: int, drivers_per_user: int = 
     drivers = db.query(models.Driver).all()
 
     return _build_random_assignments(active_users, drivers, gp_id, drivers_per_user)
+
+
+def open_pack_for_current_gp(db: Session, requester_user_id, drivers_per_user: int = 5):
+    """
+    T4.2:
+    - Bloquea tabla assignments durante el proceso
+    - Verifica si ya hay asignaciones para el GP activo
+    - Si no hay, ejecuta reparto masivo (T4.1)
+    - Marca al usuario solicitante como "Sobre Abierto"
+    """
+    current_gp = db.query(models.GrandPrix).filter(models.GrandPrix.is_active == True).first()
+    if not current_gp:
+        raise ValueError("No hay un Grand Prix activo para abrir sobres.")
+
+    # Lock explícito de tabla para evitar colisiones en primera apertura concurrente.
+    db.execute(text("LOCK TABLE assignments IN SHARE ROW EXCLUSIVE MODE"))
+
+    has_assignments = (
+        db.query(models.Assignment.id).filter(models.Assignment.gp_id == current_gp.id).first()
+        is not None
+    )
+
+    if not has_assignments:
+        batch_assignments = generate_batch_assignments(db, current_gp.id, drivers_per_user)
+        db.add_all(batch_assignments)
+        db.flush()
+
+    user_assignments = (
+        db.query(models.Assignment)
+        .filter(
+            models.Assignment.gp_id == current_gp.id,
+            models.Assignment.user_id == requester_user_id,
+            models.Assignment.is_active == True,
+        )
+        .all()
+    )
+
+    if not user_assignments:
+        raise ValueError("El usuario no tiene asignaciones activas para el GP actual.")
+
+    for assignment in user_assignments:
+        assignment.is_pack_opened = True
+        db.add(assignment)
+
+    db.commit()
+
+    return user_assignments

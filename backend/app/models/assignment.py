@@ -20,6 +20,7 @@ class Assignment(Base):
     
     acquired_method = Column(Enum(AcquiredMethod), nullable=False)
     is_active = Column(Boolean, default=True)
+    is_pack_opened = Column(Boolean, default=False)
 
     # Un piloto solo puede pertenecer a un usuario por GP
     __table_args__ = (
