@@ -5,11 +5,12 @@ from app.database import get_db
 from app.crud import grand_prix as gp_crud
 from app.schemas.grand_prix import GrandPrixOut, GrandPrixCreate, GrandPrixUpdate
 from app.dependencies import get_current_admin_user
+from app.core.auth import get_current_user
 
 # Definir el router con el prefijo /gp
 router = APIRouter(prefix="/gp", tags=["Grandes Premios"])
 
-@router.get("/", response_model=List[GrandPrixOut])
+@router.get("/", response_model=List[GrandPrixOut], dependencies=[Depends(get_current_user)])
 def read_gps(db: Session = Depends(get_db)):
     """
     Retorna el calendario de Grandes Premios.

@@ -5,11 +5,12 @@ from app.database import get_db
 from app.crud import driver as driver_crud
 from app.schemas.driver import DriverOut, DriverCreate, DriverUpdate
 from app.dependencies import get_current_admin_user
+from app.core.auth import get_current_user
 
 # Definimos el router con su prefijo
 router = APIRouter(prefix="/drivers", tags=["Pilotos"])
 
-@router.get("/", response_model=List[DriverOut])
+@router.get("/", response_model=List[DriverOut], dependencies=[Depends(get_current_user)])
 def read_drivers(db: Session = Depends(get_db)):
     """
     Retorna la lista de todos los pilotos disponibles en la tabla drivers.

@@ -4,6 +4,7 @@ from typing import List
 
 from app.database import get_db
 from app.dependencies import get_current_admin_user
+from app.models import race_results
 from app.schemas.race_results import RaceResultCreate, RaceResultOut
 from app.crud import race_results as results_crud
 
@@ -31,3 +32,15 @@ def upload_race_results(
     # Guardar todo de golpe
     saved_results = results_crud.save_race_results(db, gp_id, results)
     return saved_results
+
+@router.get("/", response_model=List[RaceResultOut], dependencies=[Depends(get_current_admin_user)])
+def get_all_results(db: Session = Depends(get_db)):
+    """
+    Obtiene todo el historial de resultados cargados en la base de datos.
+    """
+    # Ordenamos por gp_id y luego por puntos de mayor a menor directamente en SQL
+    results = db.query(race_results.RaceResult).order_by(
+        race_results.RaceResult.gp_id,
+        race_results.RaceResult.gp_points.desc()
+    ).all()
+    return results
