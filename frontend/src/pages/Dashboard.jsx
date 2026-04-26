@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getGPs, getMyAssignedDrivers } from '../services/api';
 import DriverList from '../components/drivers/DriversList';
 import Header from '../components/layout/Header';
+import ClosedPackEnvelope from '../components/packs/ClosedPackEnvelope';
 
 const Dashboard = () => {
   const [drivers, setDrivers] = useState([]);
@@ -189,13 +190,12 @@ const Dashboard = () => {
               Usar comodín
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={() => window.alert('Próximamente: obtención de pilotos')}
-              className="bg-emerald-600 hover:bg-emerald-500 transition-colors text-white font-bold px-5 py-2 rounded-lg"
-            >
-              Obtener pilotos
-            </button>
+            <div>
+              <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
+                The Box - Sobre cerrado
+              </p>
+              <ClosedPackEnvelope onOpen={() => window.alert('Próximamente: apertura del sobre')} />
+            </div>
           )}
         </div>
       </section>
