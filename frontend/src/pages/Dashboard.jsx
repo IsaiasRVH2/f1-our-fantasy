@@ -135,6 +135,7 @@ const Dashboard = () => {
     revealedCardIds,
     errorMessage: packError,
     isOpening,
+    isHydrating,
     isRevealed,
     openPack,
     revealCard,
@@ -205,7 +206,13 @@ const Dashboard = () => {
         />
 
         <div className="mt-6">
-          {drivers.length > 0 ? (
+          {isRevealed ? (
+            <PackRevealBoard
+              cards={packCards}
+              revealedCardIds={revealedCardIds}
+              onRevealCard={revealCard}
+            />
+          ) : drivers.length > 0 ? (
             <button
               type="button"
               onClick={() => window.alert('Próximamente: uso de comodines')}
@@ -220,7 +227,7 @@ const Dashboard = () => {
                   <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
                     The Box - Sobre cerrado
                   </p>
-                  <ClosedPackEnvelope onOpen={openPack} disabled={isOpening} />
+                  <ClosedPackEnvelope onOpen={openPack} disabled={isOpening || isHydrating} />
                 </>
               ) : (
                 <PackRevealBoard

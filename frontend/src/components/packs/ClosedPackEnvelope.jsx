@@ -25,8 +25,11 @@ const ClosedPackEnvelope = ({ onOpen, disabled = false }) => {
   const handleOpen = () => {
     if (disabled || isExploding) return;
     setIsExploding(true);
-    window.setTimeout(() => {
-      onOpen?.();
+    window.setTimeout(async () => {
+      const openSucceeded = await onOpen?.();
+      if (!openSucceeded) {
+        setIsExploding(false);
+      }
     }, 520);
   };
 

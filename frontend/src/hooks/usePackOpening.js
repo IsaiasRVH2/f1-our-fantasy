@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { getFreeAgents } from '../services/api';
+import { useCallback, useEffect, useState } from 'react';
+import { getMyHand, openPack as openPackApi } from '../services/api';
 
 const PACK_STATES = {
   CLOSED: 'closed',
@@ -12,6 +12,18 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
   const [packCards, setPackCards] = useState([]);
   const [revealedCardIds, setRevealedCardIds] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isHydrating, setIsHydrating] = useState(false);
+
+  const normalizeCards = useCallback(
+    (drivers) =>
+      drivers.slice(0, packSize).map((driver) => ({
+        id: driver.id,
+        full_name: driver.full_name,
+        team_name: driver.team_name,
+        abbreviation: driver.abbreviation || 'F1',
+      })),
+    [packSize]
+  );
 
   const openPack = useCallback(async () => {
     if (!gpId) {
@@ -23,13 +35,8 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
     setPackState(PACK_STATES.OPENING);
 
     try {
-      const freeAgents = await getFreeAgents(gpId);
-      const selectedCards = freeAgents.slice(0, packSize).map((driver) => ({
-        id: driver.id,
-        full_name: driver.full_name,
-        team_name: driver.team_name,
-        abbreviation: driver.abbreviation || 'F1',
-      }));
+      const assignedDrivers = await openPackApi();
+      const selectedCards = normalizeCards(assignedDrivers);
 
       if (selectedCards.length === 0) {
         setPackState(PACK_STATES.CLOSED);
@@ -47,7 +54,7 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
       setErrorMessage('No se pudo abrir el sobre. Intenta nuevamente.');
       return false;
     }
-  }, [gpId, packSize]);
+  }, [gpId, normalizeCards]);
 
   const revealCard = useCallback((cardId) => {
     setRevealedCardIds((current) => (current.includes(cardId) ? current : [...current, cardId]));
@@ -60,6 +67,39 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
     setErrorMessage('');
   }, []);
 
+  useEffect(() => {
+    if (!gpId) return;
+
+    let isMounted = true;
+    const hydrateOpenedPack = async () => {
+      setPackState(PACK_STATES.CLOSED);
+      setPackCards([]);
+      setRevealedCardIds([]);
+      setErrorMessage('');
+      setIsHydrating(true);
+      try {
+        const hand = await getMyHand();
+        if (!isMounted || !hand?.length) return;
+        setPackCards(normalizeCards(hand));
+        setPackState(PACK_STATES.REVEALED);
+      } catch (error) {
+        // 404 significa que el usuario aun no abrio su sobre en este GP.
+        if (error?.response?.status !== 404) {
+          console.error('Error verificando mano persistida:', error);
+        }
+      } finally {
+        if (isMounted) {
+          setIsHydrating(false);
+        }
+      }
+    };
+
+    hydrateOpenedPack();
+    return () => {
+      isMounted = false;
+    };
+  }, [gpId, normalizeCards]);
+
   return {
     packState,
     packCards,
@@ -68,6 +108,7 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
     isClosed: packState === PACK_STATES.CLOSED,
     isOpening: packState === PACK_STATES.OPENING,
     isRevealed: packState === PACK_STATES.REVEALED,
+    isHydrating,
     openPack,
     revealCard,
     resetPack,

@@ -80,6 +80,22 @@ export const getMyAssignedDrivers = async (gpId) => {
   return response.data;
 };
 
+export const openPack = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/packs/open', null, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getMyHand = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/packs/my-hand', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export const deleteDriver = async (driverId) => {
   const token = localStorage.getItem('token');
   const response = await api.delete(`/drivers/${driverId}`, {

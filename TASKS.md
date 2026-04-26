@@ -57,7 +57,7 @@ Tareas ordenadas por numero y marcadas por estado.
 - [x] **T4.7: Animación de Vibración y Explosión**
 - [x] **T4.8: Lógica de Revelado Individual**
 - [ ] **T4.9: Hook usePackOpening**
-- [ ] **T4.10: Persistencia de Apertura**
+- [x] **T4.10: Persistencia de Apertura**
 - [ ] **T4.11: Prueba de Concurrencia**
 - [ ] **T4.12: Validación del Hito**
 - [ ] **T5.1: Contador de Mitad de Temporada**
