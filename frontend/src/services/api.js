@@ -162,4 +162,28 @@ export const uploadRaceResults = async (gpId, resultsData) => {
   return response.data;
 };
 
+export const getAdminUsers = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/admin/users/', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const deleteAdminUser = async (userId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/admin/users/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const resetAdminUserPassword = async (userId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post(`/admin/users/${userId}/reset-password`, null, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export default api;

@@ -9,6 +9,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import AdminDriversPage from './pages/admin/AdminDriversPage';
 import AdminGPPage from './pages/admin/AdminGPPage';
 import AdminResultsPage from './pages/admin/AdminResultsPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminRoute from './components/auth/AdminRoute';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
                 <Route path="/admin/gp" element={<AdminGPPage />} /> 
                 <Route path="/admin/results" element={<AdminResultsPage />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
               </Route>
             </Route>
           </Route>

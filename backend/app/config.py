@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     ACCESS_CODE: str
+    ADMIN_DEFAULT_RESET_PASSWORD: str = "F1Admin2026!"
 
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod

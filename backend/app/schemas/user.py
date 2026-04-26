@@ -48,3 +48,7 @@ class UserOut(UserBase):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+
+class UserAdminActionOut(BaseModel):
+    message: str

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Users, Calendar, Flag, LogOut, Home, Menu, X } from 'lucide-react';
+import { Users, Calendar, Flag, LogOut, Home, Menu, X, UserCog } from 'lucide-react';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const AdminLayout = () => {
     { path: '/admin/drivers', name: 'Pilotos', icon: Users },
     { path: '/admin/gp', name: 'Calendario', icon: Calendar },
     { path: '/admin/results', name: 'Resultados', icon: Flag },
+    { path: '/admin/users', name: 'Usuarios', icon: UserCog },
   ];
   
   const closeSidebar = () => setIsSidebarOpen(false);
