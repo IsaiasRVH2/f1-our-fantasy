@@ -18,6 +18,14 @@ def read_drivers(db: Session = Depends(get_db)):
     drivers = driver_crud.get_all_drivers(db)
     return drivers
 
+@router.get("/free-agents", response_model=List[DriverOut], dependencies=[Depends(get_current_user)])
+def read_free_agents(gp_id: int | None = None, db: Session = Depends(get_db)):
+    """
+    Retorna la lista de pilotos no asignados para un GP.
+    Si no se envía gp_id, usa el GP activo.
+    """
+    return driver_crud.get_free_agents(db, gp_id)
+
 @router.post("/", response_model=DriverOut, status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_admin_user)])
 def create_driver(driver_in: DriverCreate, db: Session = Depends(get_db)):
     """

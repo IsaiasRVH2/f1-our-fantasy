@@ -8,6 +8,25 @@ def get_all_drivers(db: Session):
     """
     return db.query(models.Driver).all()
 
+def get_free_agents(db: Session, gp_id: int | None = None):
+    """
+    Obtiene los pilotos que no están asignados para un GP.
+    Si no se recibe gp_id, usa el GP activo; si no hay GP activo, retorna toda la parrilla.
+    """
+    target_gp_id = gp_id
+    if target_gp_id is None:
+        active_gp = db.query(models.GrandPrix).filter(models.GrandPrix.is_active == True).first()
+        if not active_gp:
+            return get_all_drivers(db)
+        target_gp_id = active_gp.id
+
+    assigned_driver_ids = db.query(models.Assignment.driver_id).filter(
+        models.Assignment.gp_id == target_gp_id,
+        models.Assignment.is_active == True
+    )
+
+    return db.query(models.Driver).filter(~models.Driver.id.in_(assigned_driver_ids)).all()
+
 def get_driver_by_id(db: Session, driver_id: int):
     return db.query(models.Driver).filter(models.Driver.id == driver_id).first()
 

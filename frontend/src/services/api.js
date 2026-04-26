@@ -56,7 +56,19 @@ export const loginUser = async (credentials) => {
 };
 
 export const getDrivers = async () => {
-  const response = await api.get('/drivers/');
+  const token = localStorage.getItem('token');
+  const response = await api.get('/drivers/', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const getFreeAgents = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const endpoint = gpId ? `/drivers/free-agents?gp_id=${gpId}` : '/drivers/free-agents';
+  const response = await api.get(endpoint, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
 
@@ -87,7 +99,10 @@ export const updateDriver = async (driverId, driverData) => {
 };
 
 export const getGPs = async () => {
-  const response = await api.get('/gp/');
+  const token = localStorage.getItem('token');
+  const response = await api.get('/gp/', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
 
