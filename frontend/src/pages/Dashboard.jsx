@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getGPs, getMyAssignedDrivers } from '../services/api';
+import { getFreeAgents, getGPs, getMyAssignedDrivers } from '../services/api';
 import DriverList from '../components/drivers/DriversList';
 import Header from '../components/layout/Header';
 import ClosedPackEnvelope from '../components/packs/ClosedPackEnvelope';
+import PackRevealBoard from '../components/packs/PackRevealBoard';
 
 const Dashboard = () => {
   const [drivers, setDrivers] = useState([]);
@@ -11,6 +12,10 @@ const Dashboard = () => {
   const [countdown, setCountdown] = useState('00:00:00:00');
   const [username, setUsername] = useState('Piloto');
   const [loading, setLoading] = useState(true);
+  const [packCards, setPackCards] = useState([]);
+  const [revealedCardIds, setRevealedCardIds] = useState([]);
+  const [isLoadingPackCards, setIsLoadingPackCards] = useState(false);
+  const [isRevealMode, setIsRevealMode] = useState(false);
 
   const sessionFields = [
     { key: 'fp1_date', label: 'FP1' },
@@ -129,6 +134,42 @@ const Dashboard = () => {
         .map((field) => ({ label: field.label, value: nextGp[field.key] }))
     : [];
 
+  const revealCard = (cardId) => {
+    setRevealedCardIds((current) => (current.includes(cardId) ? current : [...current, cardId]));
+  };
+
+  const openPack = async () => {
+    if (!nextGp) {
+      window.alert('No hay GP activo para abrir el sobre.');
+      return;
+    }
+
+    setIsLoadingPackCards(true);
+    try {
+      const freeAgents = await getFreeAgents(nextGp.id);
+      const selectedCards = freeAgents.slice(0, 5).map((driver) => ({
+        id: driver.id,
+        full_name: driver.full_name,
+        team_name: driver.team_name,
+        abbreviation: driver.abbreviation || 'F1',
+      }));
+
+      if (selectedCards.length === 0) {
+        window.alert('No hay pilotos disponibles para revelar en este GP.');
+        return;
+      }
+
+      setPackCards(selectedCards);
+      setRevealedCardIds([]);
+      setIsRevealMode(true);
+    } catch (error) {
+      console.error('Error al abrir el sobre:', error);
+      window.alert('No se pudo abrir el sobre. Intenta nuevamente.');
+    } finally {
+      setIsLoadingPackCards(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
       <Header username={username} />
@@ -191,10 +232,20 @@ const Dashboard = () => {
             </button>
           ) : (
             <div>
-              <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
-                The Box - Sobre cerrado
-              </p>
-              <ClosedPackEnvelope onOpen={() => window.alert('Próximamente: apertura del sobre')} />
+              {!isRevealMode ? (
+                <>
+                  <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
+                    The Box - Sobre cerrado
+                  </p>
+                  <ClosedPackEnvelope onOpen={openPack} disabled={isLoadingPackCards} />
+                </>
+              ) : (
+                <PackRevealBoard
+                  cards={packCards}
+                  revealedCardIds={revealedCardIds}
+                  onRevealCard={revealCard}
+                />
+              )}
             </div>
           )}
         </div>

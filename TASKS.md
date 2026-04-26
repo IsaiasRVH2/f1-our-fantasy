@@ -55,7 +55,7 @@ Tareas ordenadas por numero y marcadas por estado.
 - [x] **T4.5: Componente DriverCard**
 - [x] **T4.6: Interfaz de "The Box" (Sobre)**
 - [x] **T4.7: Animación de Vibración y Explosión**
-- [ ] **T4.8: Lógica de Revelado Individual**
+- [x] **T4.8: Lógica de Revelado Individual**
 - [ ] **T4.9: Hook usePackOpening**
 - [ ] **T4.10: Persistencia de Apertura**
 - [ ] **T4.11: Prueba de Concurrencia**
