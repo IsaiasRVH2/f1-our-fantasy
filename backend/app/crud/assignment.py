@@ -116,3 +116,27 @@ def open_pack_for_current_gp(db: Session, requester_user_id, drivers_per_user: i
     db.commit()
 
     return user_assignments
+
+
+def get_user_assignments_for_current_gp(db: Session, requester_user_id):
+    """
+    Recupera asignaciones del usuario para el GP activo sin crear ni modificar datos.
+    """
+    current_gp = db.query(models.GrandPrix).filter(models.GrandPrix.is_active == True).first()
+    if not current_gp:
+        raise ValueError("No hay un Grand Prix activo.")
+
+    user_assignments = (
+        db.query(models.Assignment)
+        .filter(
+            models.Assignment.gp_id == current_gp.id,
+            models.Assignment.user_id == requester_user_id,
+            models.Assignment.is_active == True,
+        )
+        .all()
+    )
+
+    if not user_assignments:
+        raise ValueError("El usuario no tiene pilotos asignados para el GP actual.")
+
+    return user_assignments

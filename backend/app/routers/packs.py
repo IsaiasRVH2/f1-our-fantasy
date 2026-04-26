@@ -29,3 +29,20 @@ def open_pack(
 
     gp_id = user_assignments[0].gp_id
     return driver_crud.get_user_assigned_drivers(db, current_user.id, gp_id)
+
+
+@router.get("/my-hand", response_model=List[DriverOut], status_code=status.HTTP_200_OK)
+def get_my_hand(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    """
+    Retorna los pilotos asignados al usuario en el GP activo sin disparar creación.
+    """
+    try:
+        user_assignments = assignment_crud.get_user_assignments_for_current_gp(db, current_user.id)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    gp_id = user_assignments[0].gp_id
+    return driver_crud.get_user_assigned_drivers(db, current_user.id, gp_id)

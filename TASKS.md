@@ -45,13 +45,13 @@ Tareas ordenadas por numero y marcadas por estado.
 - [x] **T3.8: Layout de Administración**
 - [x] **T3.9: Formulario de Resultados (Grid)**
 - [x] **T3.10: Feedback de Carga**
-- [ ] **T3.11: Flujo de Gestión**
-- [ ] **T3.12: Verificación de Datos**
-- [ ] **T3.13: Validación del Hito**
+- [x] **T3.11: Flujo de Gestión**
+- [x] **T3.12: Verificación de Datos**
+- [x] **T3.13: Validación del Hito**
 - [ ] **T4.1: Algoritmo de Reparto Aleatorio**
 - [ ] **T4.2: Transacción Atómica de Apertura**
 - [ ] **T4.3: Endpoint POST /packs/open**
-- [ ] **T4.4: Endpoint GET /packs/my-hand**
+- [x] **T4.4: Endpoint GET /packs/my-hand**
 - [ ] **T4.5: Componente DriverCard**
 - [ ] **T4.6: Interfaz de "The Box" (Sobre)**
 - [ ] **T4.7: Animación de Vibración y Explosión**
