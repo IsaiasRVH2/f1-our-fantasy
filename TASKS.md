@@ -52,8 +52,8 @@ Tareas ordenadas por numero y marcadas por estado.
 - [ ] **T4.2: Transacción Atómica de Apertura**
 - [ ] **T4.3: Endpoint POST /packs/open**
 - [x] **T4.4: Endpoint GET /packs/my-hand**
-- [ ] **T4.5: Componente DriverCard**
-- [ ] **T4.6: Interfaz de "The Box" (Sobre)**
+- [x] **T4.5: Componente DriverCard**
+- [x] **T4.6: Interfaz de "The Box" (Sobre)**
 - [ ] **T4.7: Animación de Vibración y Explosión**
 - [ ] **T4.8: Lógica de Revelado Individual**
 - [ ] **T4.9: Hook usePackOpening**
