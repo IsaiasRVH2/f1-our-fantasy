@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from app import models
 from app.models.assignment import AcquiredMethod
-from app.models.user import UserRole
 
 
 def _build_random_assignments(
@@ -58,17 +57,45 @@ def _build_random_assignments(
 def generate_batch_assignments(db: Session, gp_id: int, drivers_per_user: int = 5):
     """
     T4.1:
-    Toma usuarios activos tipo player y pilotos disponibles para crear
+    Toma usuarios activos (incluyendo admins) y pilotos disponibles para crear
     asignaciones aleatorias de 5 pilotos únicos por usuario.
     """
-    active_users = (
-        db.query(models.User)
-        .filter(models.User.is_active == True, models.User.role == UserRole.player)
-        .all()
-    )
+    active_users = db.query(models.User).filter(models.User.is_active == True).all()
     drivers = db.query(models.Driver).all()
 
     return _build_random_assignments(active_users, drivers, gp_id, drivers_per_user)
+
+
+def _assign_missing_user_for_gp(db: Session, user_id, gp_id: int, drivers_per_user: int):
+    assigned_driver_ids = (
+        db.query(models.Assignment.driver_id)
+        .filter(models.Assignment.gp_id == gp_id, models.Assignment.is_active == True)
+        .all()
+    )
+    assigned_driver_ids = {driver_id for (driver_id,) in assigned_driver_ids}
+
+    available_drivers = db.query(models.Driver).all()
+    free_drivers = [driver for driver in available_drivers if driver.id not in assigned_driver_ids]
+    if len(free_drivers) < drivers_per_user:
+        raise ValueError(
+            "No hay suficientes pilotos libres para asignar un sobre a este usuario en el GP actual."
+        )
+
+    random.shuffle(free_drivers)
+    new_assignments = [
+        models.Assignment(
+            user_id=user_id,
+            driver_id=driver.id,
+            gp_id=gp_id,
+            acquired_method=AcquiredMethod.pack_opening,
+            is_active=True,
+            is_pack_opened=False,
+        )
+        for driver in free_drivers[:drivers_per_user]
+    ]
+    db.add_all(new_assignments)
+    db.flush()
+    return new_assignments
 
 
 def open_pack_for_current_gp(db: Session, requester_user_id, drivers_per_user: int = 5):
@@ -82,6 +109,14 @@ def open_pack_for_current_gp(db: Session, requester_user_id, drivers_per_user: i
     current_gp = db.query(models.GrandPrix).filter(models.GrandPrix.is_active == True).first()
     if not current_gp:
         raise ValueError("No hay un Grand Prix activo para abrir sobres.")
+
+    requester_user = (
+        db.query(models.User)
+        .filter(models.User.id == requester_user_id, models.User.is_active == True)
+        .first()
+    )
+    if not requester_user:
+        raise ValueError("El usuario no esta activo o no existe.")
 
     # Lock explícito de tabla para evitar colisiones en primera apertura concurrente.
     db.execute(text("LOCK TABLE assignments IN SHARE ROW EXCLUSIVE MODE"))
@@ -107,7 +142,9 @@ def open_pack_for_current_gp(db: Session, requester_user_id, drivers_per_user: i
     )
 
     if not user_assignments:
-        raise ValueError("El usuario no tiene asignaciones activas para el GP actual.")
+        user_assignments = _assign_missing_user_for_gp(
+            db, requester_user_id, current_gp.id, drivers_per_user
+        )
 
     for assignment in user_assignments:
         assignment.is_pack_opened = True
