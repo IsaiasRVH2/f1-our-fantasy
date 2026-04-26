@@ -1,23 +1,68 @@
-import ConnectionStatus from './components/base/ConnectionStatus';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import HealthCheck from './pages/HealthCheck';
+import AdminLayout from './components/layout/AdminLayout';
+import AdminDriversPage from './pages/admin/AdminDriversPage';
+import AdminGPPage from './pages/admin/AdminGPPage';
+import AdminResultsPage from './pages/admin/AdminResultsPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminRoute from './components/auth/AdminRoute';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
-          F1 Fantasy TCG
-        </h1>
-        <p className="text-slate-600">Checking backend connection</p>
-      </header>
+    <AuthProvider>
+      <Toaster  
+        position="bottom-right" 
+        toastOptions={{
+          style: {
+            background: '#1e293b', // Color de fondo slate-800
+            color: '#fff',
+            border: '1px solid #334155', // slate-700
+          },
+          success: {
+            iconTheme: { primary: '#10b981', secondary: '#fff' }, // Verde
+          },
+          error: {
+            iconTheme: { primary: '#ef4444', secondary: '#fff' }, // Rojo
+          },
+        }} 
+      />
       
-      <main>
-        <ConnectionStatus />
-      </main>
-      
-      <footer className="mt-12 text-slate-400 text-sm">
-        Developed by Isaias Ricardo Valdivia - 2026
-      </footer>
-    </div>
+      <Router>
+        <Routes>
+          {/* RUTAS PÚBLICAS */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/health" element={<HealthCheck />} />
+          
+          {/* RUTAS PROTEGIDAS */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            {/* GRUPO DE RUTAS DE ADMINISTRADOR */}
+            <Route element={<AdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin/drivers" element={<AdminDriversPage />} /> 
+                <Route path="/admin/gp" element={<AdminGPPage />} /> 
+                <Route path="/admin/results" element={<AdminResultsPage />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
+              </Route>
+            </Route>
+          </Route>
+
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="*" element={
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white font-black uppercase italic text-4xl">
+              404 - Out of Track
+            </div>
+          } />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

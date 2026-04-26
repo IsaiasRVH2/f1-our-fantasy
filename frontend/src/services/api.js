@@ -24,4 +24,166 @@ export const checkHealth = async () => {
     }
 };
 
+/**
+ * Registra un nuevo usuario en el sistema.
+ * @param {*} userData - Los datos del usuario a registrar.
+ * @returns {Promise} - La promesa que se resuelve con los datos del usuario registrado.
+ */
+export const registerUser = async (userData) => {
+  const response = await api.post('/auth/register', userData);
+  return response.data;
+};
+
+/**
+ * Inicia sesión en el sistema.
+ * @param {*} credentials - Las credenciales del usuario (email y contraseña).
+ * @returns {Promise} - La promesa que se resuelve con los datos del usuario autenticado.
+ */
+
+export const loginUser = async (credentials) => {
+  
+  const formData = new URLSearchParams();
+  // Mapeamos nuestro 'email' al campo 'username' que espera FastAPI
+  formData.append('username', credentials.email); 
+  formData.append('password', credentials.password);
+
+  const response = await api.post('/auth/login', formData, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+  return response.data; 
+};
+
+export const getDrivers = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/drivers/', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const getFreeAgents = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const endpoint = gpId ? `/drivers/free-agents?gp_id=${gpId}` : '/drivers/free-agents';
+  const response = await api.get(endpoint, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const getMyAssignedDrivers = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.get(`/drivers/my-assigned?gp_id=${gpId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const openPack = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/packs/open', null, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getMyHand = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/packs/my-hand', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const deleteDriver = async (driverId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/drivers/${driverId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+};
+
+export const createDriver = async (driverData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/drivers/', driverData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateDriver = async (driverId, driverData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.patch(`/drivers/${driverId}`, driverData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const getGPs = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/gp/', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const createGP = async (gpData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post('/gp/', gpData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateGP = async (gpId, gpData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.patch(`/gp/${gpId}`, gpData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteGP = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/gp/${gpId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const uploadRaceResults = async (gpId, resultsData) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post(`/admin/results/${gpId}`, resultsData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const getAdminUsers = async () => {
+  const token = localStorage.getItem('token');
+  const response = await api.get('/admin/users/', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const deleteAdminUser = async (userId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/admin/users/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const resetAdminUserPassword = async (userId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.post(`/admin/users/${userId}/reset-password`, null, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export default api;

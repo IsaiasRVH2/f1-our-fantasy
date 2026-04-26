@@ -1,0 +1,101 @@
+# TASKS
+
+Tareas ordenadas por numero y marcadas por estado.
+
+- [x] **T1.1: Instancia de Base de Datos**
+- [x] **T1.2: Variables de Entorno**
+- [x] **T1.3: Configuración de SQLAlchemy**
+- [x] **T1.4: Script de Verificación**
+- [x] **T1.5: Entorno Virtual**
+- [x] **T1.6: Estructura de Directorios**
+- [x] **T1.7: Configuración de CORS**
+- [x] **T1.8: Endpoint de Salud (Health Check)**
+- [x] **T1.9: Inicialización con Vite**
+- [x] **T1.10: Instalación de Estilos y Animaciones**
+- [x] **T1.11: Configuración de Axios/Fetch**
+- [x] **T1.12: Estructura de Carpetas**
+- [x] **T1.13: Componente "Hello World"**
+- [x] **T1.14: Feedback Visual**
+- [x] **T1.15: Validación del Hito**
+- [x] **T2.1: Definición de Modelos SQLAlchemy**
+- [x] **T2.2: Scripts de Creación**
+- [x] **T2.3: Seed de Datos (Pilotos):**
+- [x] **T2.4: Seed de Datos (Calendario)**
+- [x] **T2.5: Utilidad de Cifrado**
+- [x] **T2.6: Endpoint de Registro**
+- [x] **T2.7: Endpoint de Login**
+- [x] **T2.8: Dependencia de Usuario Actual**
+- [x] **T2.9: Componente de Registro**
+- [x] **T2.10: Componente de Login**
+- [x] **T2.11: Manejo de Estado de Auth**
+- [x] **T2.12: Rutas Protegidas**
+- [x] **T2.13: Listado de Pilotos**
+- [x] **T2.14: Listado de Calendario**
+- [x] **T2.15: Prueba End-to-End**
+- [x] **T2.16: Visualización Inicial**
+- [x] **T2.17: Validación del Hito**
+- [x] **T3.1: Middlewares de Rol**
+- [x] **T3.2: Protección de Endpoints**
+- [x] **T3.3: CRUD de Pilotos (Admin)**
+- [x] **T3.4: Gestión de Grandes Premios (Admin)**
+- [x] **T3.5: Esquema de Resultados**
+- [x] **T3.6: Endpoint de Carga de Resultados**
+- [x] **T3.7: Vista de Agentes Libres**
+- [x] **T3.7: Lógica de Persistencia de Resultados**
+- [x] **T3.8: Layout de Administración**
+- [x] **T3.9: Formulario de Resultados (Grid)**
+- [x] **T3.10: Feedback de Carga**
+- [x] **T3.11: Flujo de Gestión**
+- [x] **T3.12: Verificación de Datos**
+- [x] **T3.13: Validación del Hito**
+- [ ] **T4.1: Algoritmo de Reparto Aleatorio**
+- [ ] **T4.2: Transacción Atómica de Apertura**
+- [ ] **T4.3: Endpoint POST /packs/open**
+- [x] **T4.4: Endpoint GET /packs/my-hand**
+- [x] **T4.5: Componente DriverCard**
+- [x] **T4.6: Interfaz de "The Box" (Sobre)**
+- [x] **T4.7: Animación de Vibración y Explosión**
+- [x] **T4.8: Lógica de Revelado Individual**
+- [ ] **T4.9: Hook usePackOpening**
+- [x] **T4.10: Persistencia de Apertura**
+- [ ] **T4.11: Prueba de Concurrencia**
+- [ ] **T4.12: Validación del Hito**
+- [ ] **T5.1: Contador de Mitad de Temporada**
+- [ ] **T5.2: Restricción de "Uno por GP"**
+- [ ] **T5.3: Control de Tiempos (Deadlines)**
+- [ ] **T5.4: Endpoint de Intercambio (Swap)**
+- [ ] **T5.5: Endpoint de Robo (Steal)**
+- [ ] **T5.6: Endpoint de Salvavidas (Lifeboat)**
+- [ ] **T5.8: Selector de Comodines (The Garage)**
+- [ ] **T5.9: Modal de "Robo de Piloto"**
+- [ ] **T5.10: Sistema de Toasts/Alertas**
+- [ ] **T5.11: Historial de Movimientos**
+- [ ] **T5.12: Prueba de Integridad**
+- [ ] **T5.13: Validación del Hito**
+- [ ] **T6.1: Mapeo de Constantes de Puntos**
+- [ ] **T6.2: Servicio de Cálculo por GP**
+- [ ] **T6.3: Algoritmo de Desempate (Tie-breaker)**
+- [ ] **T6.4: Recalculado Masivo**
+- [ ] **T6.5: Endpoint de Clasificación Global**
+- [ ] **T6.6: Endpoint de Desglose por GP**
+- [ ] **T6.7: Vista de Tabla General (Leaderboard)**
+- [ ] **T6.8: Indicadores de Desempate**
+- [ ] **T6.9: Vista de Detalles de Puntos**
+- [ ] **T6.10: Validación de Casos de Borde**
+- [ ] **T6.11: Simulación de Empate**
+- [ ] **T6.12: Cierre de Ciclo de Juego**
+- [ ] **T6.13: Validación del Hito**
+- [ ] **T7.1: Auditoría Mobile-First**
+- [ ] **T7.2: Estados de Carga (Skeletons)**
+- [ ] **T7.3: Manejo Global de Errores**
+- [ ] **T7.4: Optimización de Activos**
+- [ ] **T7.5: Dockerización de la App**
+- [ ] **T7.6: Configuración de Producción**
+- [ ] **T7.7: Migraciones de Base de Datos**
+- [ ] **T7.8: Configuración del Servidor**
+- [ ] **T7.9: Configuración de Dominio y SSL**
+- [ ] **T7.10: CI/CD Básico**
+- [ ] **T7.11: Prueba de Carga del Sobre**
+- [ ] **T7.12: Simulación de Ciclo Completo**
+- [ ] **T7.13: Guía de Usuario**
+- [ ] **T7.14: Validación del Hito**

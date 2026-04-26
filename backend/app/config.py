@@ -5,7 +5,12 @@ from typing import List, Union
 class Settings(BaseSettings):
     DATABASE_URL: str
     ALLOWED_ORIGINS: Union[List[str], str]
-    
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ACCESS_CODE: str
+    ADMIN_DEFAULT_RESET_PASSWORD: str = "F1Admin2026!"
+
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
