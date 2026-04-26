@@ -21,6 +21,7 @@ export const usePackOpening = ({ gpId, packSize = 5 } = {}) => {
         full_name: driver.full_name,
         team_name: driver.team_name,
         abbreviation: driver.abbreviation || 'F1',
+        image_url: driver.image_url || null,
       })),
     [packSize]
   );

@@ -13,6 +13,8 @@ const Dashboard = () => {
   const [countdown, setCountdown] = useState('00:00:00:00');
   const [username, setUsername] = useState('Piloto');
   const [loading, setLoading] = useState(true);
+  const [packOverlayStage, setPackOverlayStage] = useState('idle');
+  const [showRevealFlow, setShowRevealFlow] = useState(false);
 
   const sessionFields = [
     { key: 'fp1_date', label: 'FP1' },
@@ -58,13 +60,7 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const gps = await getGPs();
-        const now = new Date();
-        const upcomingGps = [...gps]
-          .map((gp) => ({ ...gp, raceDateObj: new Date(gp.race_date) }))
-          .filter((gp) => gp.raceDateObj > now)
-          .sort((a, b) => a.raceDateObj - b.raceDateObj);
-
-        const selectedGp = upcomingGps[0] || null;
+        const selectedGp = gps.find((gp) => gp.is_active) || null;
         setNextGp(selectedGp);
 
         if (selectedGp) {
@@ -130,6 +126,16 @@ const Dashboard = () => {
         .filter((field) => nextGp[field.key])
         .map((field) => ({ label: field.label, value: nextGp[field.key] }))
     : [];
+
+  const refreshAssignedDrivers = async (gpId) => {
+    if (!gpId) return;
+    try {
+      const assignedDrivers = await getMyAssignedDrivers(gpId);
+      setDrivers(assignedDrivers);
+    } catch (error) {
+      console.error('Error al refrescar pilotos asignados:', error);
+    }
+  };
   const {
     packCards,
     revealedCardIds,
@@ -139,20 +145,38 @@ const Dashboard = () => {
     isRevealed,
     openPack,
     revealCard,
-    resetPack,
   } = usePackOpening({ gpId: nextGp?.id, packSize: 5 });
 
   useEffect(() => {
-    if (drivers.length > 0) {
-      resetPack();
-    }
-  }, [drivers.length, resetPack]);
+    setPackOverlayStage('idle');
+    setShowRevealFlow(false);
+  }, [nextGp?.id]);
 
   useEffect(() => {
     if (packError) {
       window.alert(packError);
     }
   }, [packError]);
+
+  const handleOpenPreview = () => {
+    setPackOverlayStage('preview');
+  };
+
+  const handleExplodeAndOpen = async () => {
+    const ok = await openPack();
+    if (ok) {
+      await refreshAssignedDrivers(nextGp?.id);
+      setShowRevealFlow(true);
+      setPackOverlayStage('reveal');
+    }
+    return ok;
+  };
+
+  const handleRevealCompleted = async () => {
+    await refreshAssignedDrivers(nextGp?.id);
+    setShowRevealFlow(false);
+    setPackOverlayStage('idle');
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
@@ -195,51 +219,63 @@ const Dashboard = () => {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-bold mb-6 border-l-4 border-emerald-500 pl-3">
-          Pilotos asignados para este GP
-        </h2>
-
-        <DriverList
-          drivers={drivers}
-          loading={loading}
-          emptyMessage="Aún no tienes pilotos asignados para este Grand Prix."
-        />
+        {isRevealed && !showRevealFlow && (
+          <>
+            <h2 className="text-2xl font-bold mb-6 border-l-4 border-emerald-500 pl-3">
+              Pilotos asignados para este GP
+            </h2>
+            <DriverList
+              drivers={drivers}
+              loading={loading}
+              emptyMessage="Aún no tienes pilotos asignados para este Grand Prix."
+            />
+          </>
+        )}
 
         <div className="mt-6">
-          {isRevealed ? (
-            <PackRevealBoard
-              cards={packCards}
-              revealedCardIds={revealedCardIds}
-              onRevealCard={revealCard}
-            />
-          ) : drivers.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => window.alert('Próximamente: uso de comodines')}
-              className="bg-cyan-600 hover:bg-cyan-500 transition-colors text-white font-bold px-5 py-2 rounded-lg"
-            >
-              Usar comodín
-            </button>
-          ) : (
+          {!isRevealed && !showRevealFlow && (
             <div>
-              {!isRevealed ? (
-                <>
-                  <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
-                    The Box - Sobre cerrado
-                  </p>
-                  <ClosedPackEnvelope onOpen={openPack} disabled={isOpening || isHydrating} />
-                </>
-              ) : (
-                <PackRevealBoard
-                  cards={packCards}
-                  revealedCardIds={revealedCardIds}
-                  onRevealCard={revealCard}
-                />
-              )}
+              <p className="mb-3 text-sm uppercase tracking-[0.2em] text-slate-400">
+                The Box - Sobre cerrado
+              </p>
+              <ClosedPackEnvelope
+                onOpen={handleOpenPreview}
+                disabled={isOpening || isHydrating}
+                enableExplosion={false}
+                className="h-[56vh] sm:h-[62vh]"
+              />
             </div>
           )}
         </div>
       </section>
+
+      {packOverlayStage !== 'idle' && (
+        <div className="fixed inset-0 z-[100] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+          {packOverlayStage === 'preview' ? (
+            <div className="h-[88vh] w-full flex flex-col items-center justify-center">
+              <p className="mb-4 text-center text-sm uppercase tracking-[0.2em] text-slate-300">
+                Click para abrir el sobre
+              </p>
+              <ClosedPackEnvelope
+                onOpen={handleExplodeAndOpen}
+                disabled={isOpening || isHydrating}
+                enableExplosion
+                className="h-full"
+              />
+            </div>
+          ) : (
+            <div className="h-[88vh] w-full max-w-6xl">
+              <PackRevealBoard
+                cards={packCards}
+                revealedCardIds={revealedCardIds}
+                onRevealCard={revealCard}
+                onContinue={handleRevealCompleted}
+                className="h-full"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

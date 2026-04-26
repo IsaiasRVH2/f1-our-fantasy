@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const PARTICLE_COLORS = ['#22d3ee', '#fb7185', '#f8fafc', '#a78bfa'];
 
-const ClosedPackEnvelope = ({ onOpen, disabled = false }) => {
+const ClosedPackEnvelope = ({ onOpen, disabled = false, enableExplosion = true, className = '' }) => {
   const [isExploding, setIsExploding] = useState(false);
   const particles = useMemo(
     () =>
@@ -24,6 +24,10 @@ const ClosedPackEnvelope = ({ onOpen, disabled = false }) => {
 
   const handleOpen = () => {
     if (disabled || isExploding) return;
+    if (!enableExplosion) {
+      onOpen?.();
+      return;
+    }
     setIsExploding(true);
     window.setTimeout(async () => {
       const openSucceeded = await onOpen?.();
@@ -36,7 +40,7 @@ const ClosedPackEnvelope = ({ onOpen, disabled = false }) => {
   const isDisabled = disabled || isExploding;
 
   return (
-    <div className="relative max-w-sm">
+    <div className={`relative flex justify-center ${className}`}>
       <AnimatePresence mode="wait">
         {!isExploding ? (
           <motion.button
@@ -55,7 +59,7 @@ const ClosedPackEnvelope = ({ onOpen, disabled = false }) => {
                   }
             }
             whileTap={isDisabled ? {} : { scale: 0.97 }}
-            className="group relative w-full overflow-hidden rounded-2xl border border-rose-500/40 bg-slate-900/95 p-5 text-left shadow-[0_20px_40px_-22px_rgba(244,63,94,0.55)] transition-all duration-300 hover:-translate-y-1 hover:border-rose-400/80 hover:shadow-[0_26px_55px_-25px_rgba(251,113,133,0.7)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="group relative h-full w-auto aspect-[9/16] overflow-hidden rounded-2xl border border-rose-500/40 bg-slate-900/95 p-4 sm:p-5 text-left shadow-[0_20px_40px_-22px_rgba(244,63,94,0.55)] transition-all duration-300 hover:-translate-y-1 hover:border-rose-400/80 hover:shadow-[0_26px_55px_-25px_rgba(251,113,133,0.7)] disabled:cursor-not-allowed disabled:opacity-60"
             exit={{
               scale: [1, 1.12, 0.3],
               opacity: [1, 1, 0],
