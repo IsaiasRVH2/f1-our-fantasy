@@ -26,6 +26,17 @@ def read_free_agents(gp_id: int | None = None, db: Session = Depends(get_db)):
     """
     return driver_crud.get_free_agents(db, gp_id)
 
+@router.get("/my-assigned", response_model=List[DriverOut], dependencies=[Depends(get_current_user)])
+def read_my_assigned_drivers(
+    gp_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """
+    Retorna la lista de pilotos asignados al usuario autenticado para un GP específico.
+    """
+    return driver_crud.get_user_assigned_drivers(db, current_user.id, gp_id)
+
 @router.post("/", response_model=DriverOut, status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_admin_user)])
 def create_driver(driver_in: DriverCreate, db: Session = Depends(get_db)):
     """

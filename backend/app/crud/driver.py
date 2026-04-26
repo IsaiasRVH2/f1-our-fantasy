@@ -27,6 +27,21 @@ def get_free_agents(db: Session, gp_id: int | None = None):
 
     return db.query(models.Driver).filter(~models.Driver.id.in_(assigned_driver_ids)).all()
 
+def get_user_assigned_drivers(db: Session, user_id, gp_id: int):
+    """
+    Obtiene los pilotos asignados a un usuario para un GP específico.
+    """
+    return (
+        db.query(models.Driver)
+        .join(models.Assignment, models.Assignment.driver_id == models.Driver.id)
+        .filter(
+            models.Assignment.user_id == user_id,
+            models.Assignment.gp_id == gp_id,
+            models.Assignment.is_active == True
+        )
+        .all()
+    )
+
 def get_driver_by_id(db: Session, driver_id: int):
     return db.query(models.Driver).filter(models.Driver.id == driver_id).first()
 

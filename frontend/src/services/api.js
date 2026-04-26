@@ -72,6 +72,14 @@ export const getFreeAgents = async (gpId) => {
   return response.data;
 };
 
+export const getMyAssignedDrivers = async (gpId) => {
+  const token = localStorage.getItem('token');
+  const response = await api.get(`/drivers/my-assigned?gp_id=${gpId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 export const deleteDriver = async (driverId) => {
   const token = localStorage.getItem('token');
   const response = await api.delete(`/drivers/${driverId}`, {

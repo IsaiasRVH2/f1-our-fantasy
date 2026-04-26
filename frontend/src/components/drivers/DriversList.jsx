@@ -1,12 +1,12 @@
 import DriverCard from './DriverCard';
 
-const DriverList = ({ drivers, loading }) => {
+const DriverList = ({ drivers, loading, emptyMessage = "No hay pilotos registrados en la base de datos." }) => {
   if (loading) {
     return <div className="text-emerald-500 animate-pulse font-mono">Cargando telemetría de la parrilla...</div>;
   }
 
   if (!drivers || drivers.length === 0) {
-    return <div className="text-slate-500 italic">No hay pilotos registrados en la base de datos.</div>;
+    return <div className="text-slate-500 italic">{emptyMessage}</div>;
   }
 
   return (
